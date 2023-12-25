@@ -14,6 +14,7 @@ const $muteIcon = getNode(".mute-icon");
 const $sliderVideos = getNodes(".swiper-slide video");
 const $slider = getNode(".tv-slide");
 const $remote = getNode("#remote-control");
+const tvEffects = getNodes(".tv-effect video");
 
 let currentVideo = $sliderVideos[0];
 $sliderVideos.forEach((video) => (video.volume = 0.5));
@@ -24,7 +25,9 @@ let isBroken = false;
 let isMute = false;
 
 const switchChannelAudio = new AudioPlayer("/assets/audio/switch channel.mp3");
+const offTVAudio = new AudioPlayer("/assets/audio/off.mp3");
 switchChannelAudio.volume(0.1);
+offTVAudio.volume(0.5);
 
 const playChannel = ({ realIndex }) => {
   if (!isPower) return;
@@ -35,8 +38,7 @@ const playChannel = ({ realIndex }) => {
 };
 
 const playAudio = (audio) => {
-  audio.stop();
-  audio.play();
+  audio.resetPlay();
 };
 
 const channelNextTV = () => {
@@ -58,12 +60,14 @@ const muteTV = () => {
 
 const powerTV = () => {
   if (isPower) {
+    playAudio(offTVAudio);
     removeTimer();
     currentVideo.pause();
     $slider.classList.add("hidden");
     $muteIcon.classList.add("hidden");
     isPower = false;
   } else {
+    playAudio(switchChannelAudio);
     removeTimer = setTimer();
     currentVideo.play();
     $slider.classList.remove("hidden");
@@ -325,7 +329,7 @@ function diceAnimation() {
   const rotationValue = [
     [-20, 0], // 1
     [0, -20], // 2
-    [10, 20] // 3
+    [10, 10] // 3
   ];
 
   punchAnime.restart();
