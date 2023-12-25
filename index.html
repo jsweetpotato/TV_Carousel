@@ -1,14 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/style.css" />
-    <script type="module" src="./src/main.js"></script>
-    <title>Vite App</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
+      defer
+    ></script>
+    <script type="module" src="/src/main.js"></script>
+    <title>TV Carousel</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="pointer" id="pointer"></div>
+    <div class="loading">
+      <h1 class="info">레트로 TV 캐러셀</h1>
+      <button class="start">start</button>
+    </div>
+    <div id="app">
+      <!-- <h1>TV Carousel</h1> -->
+      <button id="tv-button" class="tv-button">
+        <div class="swiper tv-slide">
+          <!-- Additional required wrapper -->
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-noise"></div>
+            <div class="swiper-slide">
+              <video src="/assets/video/중성마녀.mp4" loop></video>
+            </div>
+            <div class="swiper-slide">
+              <video src="/assets/video/호박고구마.mp4" loop></video>
+            </div>
+            <div class="swiper-slide">
+              <video src="/assets/video/힙통령.mp4" loop></video>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+        <img
+          class="tv"
+          id="tv"
+          src="/assets/pngwing.com.png"
+          alt="레트로 티비"
+          draggable="false"
+        />
+        <img class="mute-icon hidden" src="/assets/Mute_Icon.svg" alt="" />
+      </button>
+      <div class="remote-control" id="remote-control">
+        <img id="remote-body" src="/assets/remote-body.png" alt="리모콘" />
+        <div class="remote-btns">
+          <buttton class="remote-btn power" id="power">
+            <img src="/assets/power-btn.png" alt="전원"
+          /></buttton>
+          <buttton class="remote-btn mute" id="mute">
+            <img src="/assets/mute-btn.png" alt="음소거"
+          /></buttton>
+          <div class="btn-wrapper">
+            <buttton class="remote-btn" id="channel-next"
+              ><img src="/assets/channel-next.png" alt="다음 채널"
+            /></buttton>
+            <p>Channel</p>
+            <buttton class="remote-btn" id="channel-prev"
+              ><img src="/assets/channel-prev.png" alt="이전 채널"
+            /></buttton>
+          </div>
+          <div class="btn-wrapper">
+            <buttton class="remote-btn" id="volumn-up"
+              ><img src="/assets/volumn-up.png" alt="볼륨 증가"
+            /></buttton>
+            <p>Volumn</p>
+            <buttton class="remote-btn" id="volumn-down">
+              <img src="/assets/volumn-down.png" alt="볼륨 감소"
+            /></buttton>
+          </div>
+        </div>
+      </div>
+      <div class="closed-caption">
+        <p class="text"></p>
+      </div>
+    </div>
   </body>
 </html>
