@@ -5,6 +5,9 @@ import { swiper } from "./swiper";
 import AudioPlayer from "./lib/utils/audio";
 import { audios } from "./data";
 
+const noise = new AudioPlayer("/assets/audio/noise.mp3");
+noise.volume(0.2);
+
 const $pointer = getNode("#pointer");
 const body = getNode("body");
 const $muteIcon = getNode(".mute-icon");
@@ -94,13 +97,13 @@ const transformRemoteBody = (() => {
         { y: 0 },
         {
           duration: 0.2,
-          y: "290"
+          y: "262"
         }
       );
     } else {
       gsap.fromTo(
         $remote,
-        { y: "290" },
+        { y: "262" },
         {
           duration: 0.2,
           y: 0
@@ -253,6 +256,7 @@ const turnToBroked = () => {
   gsap.to(currentVideo, {
     autoAlpha: 0
   });
+  noise.loopPlay();
 };
 
 const tryToFix = () => {
@@ -278,6 +282,7 @@ const turnToFixed = () => {
   });
   removeTimer();
   removeTimer = setTimer();
+  noise.stop();
 };
 
 const setTimer = () => {

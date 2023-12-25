@@ -29,6 +29,21 @@
   --pointer-p-w: 150px;
   --pointer-p-h: 230px;
 }
+
+@media (max-width: 500px) {
+  :root {
+    background-image: radial-gradient(#ffffffb5, #131313),
+      linear-gradient(to bottom, #111111 50%, #5b5b5b 0%);
+  }
+  .pointer {
+    display: none;
+  }
+  .remote-control {
+    right: 0 !important;
+    transform: scale(0.9);
+  }
+}
+
 body::after {
   /* 소스만 다운받고 화면은 나태내지 않는다. (숨김 처리) */
   position: absolute;
@@ -45,6 +60,8 @@ body::after {
 .loading {
   position: absolute;
   width: 100%;
+  padding-inline: 10vw;
+  text-align: center;
   height: 100%;
   background-color: #141414;
   z-index: 9;
@@ -139,6 +156,14 @@ h1 {
   background-color: transparent;
   border: none;
 }
+.bg {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  background-color: #111111;
+  left: 5%;
+  top: 5%;
+}
 
 .tv {
   pointer-events: none;
@@ -149,6 +174,7 @@ h1 {
   height: 100%;
   z-index: 3;
 }
+
 .mute-icon {
   position: absolute;
   width: 7%;
@@ -185,8 +211,8 @@ h1 {
 .remote-control {
   right: 10vw;
   bottom: 0;
-  max-height: 350px;
-  max-width: 150px;
+  max-height: 340px;
+  max-width: 160px;
   background-color: transparent;
   border: none;
   z-index: 6;
@@ -200,7 +226,7 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-inline: 1rem;
-  margin-top: -30px;
+  margin-top: -25px;
   row-gap: 1rem;
 }
 
@@ -220,10 +246,11 @@ h1 {
 
 .closed-caption {
   min-width: 20px;
-  font-size: 1.2rem;
-  color: rgb(216, 151, 0);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(190, 79, 0);
 }
 .closed-caption .text {
   margin: 0;
-  height: 20px;
+  height: 50px;
 }
