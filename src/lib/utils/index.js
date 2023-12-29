@@ -5,4 +5,4 @@ export * from "./color.js";
 export * from "./tiger.js";
 export * from "./delay.js";
 export * from "./typeOf.js";
-export { default as clearContents } from "./audio.js";
+export { default as AudioPlayer } from "./audio.js";

@@ -1,4 +1,4 @@
-export const audios = [
+export const swearData = [
   {
     src: "/assets/audio/vittu01.mp3",
     pol: "Haista vittu!",

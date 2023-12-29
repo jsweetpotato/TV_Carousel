@@ -1,44 +1,34 @@
 import gsap from "gsap";
-import { getNode, getNodes } from "./lib/dom/getNode";
-import { bindEvent } from "./lib/dom/bindEvent";
+import * as audio from "./audios";
+import * as anime from "./anime";
+import { getNode, getNodes, bindEvent } from "/src/lib/";
+import { swearData } from "./data";
 import { swiper } from "./swiper";
-import AudioPlayer from "./lib/utils/audio";
-import { audios } from "./data";
-
-const noise = new AudioPlayer("/assets/audio/noise.mp3");
-noise.volume(0.2);
 
 const $pointer = getNode("#pointer");
-const body = getNode("body");
+const $body = getNode("body");
 const $muteIcon = getNode(".mute-icon");
 const $sliderVideos = getNodes(".swiper-slide video");
 const $slider = getNode(".tv-slide");
 const $remote = getNode("#remote-control");
-const tvEffects = getNodes(".tv-effect video");
+const $ccText = getNode(".closed-caption .text");
 
-let currentVideo = $sliderVideos[0];
-$sliderVideos.forEach((video) => (video.volume = 0.5));
-
-let isPower = true;
 let volumn = 1;
+let isEnd = true;
+let isPower = true;
 let isBroken = false;
 let isMute = false;
+let currentVideo = $sliderVideos[0];
+let currentAudio;
 
-const switchChannelAudio = new AudioPlayer("/assets/audio/switch channel.mp3");
-const offTVAudio = new AudioPlayer("/assets/audio/off.mp3");
-switchChannelAudio.volume(0.1);
-offTVAudio.volume(0.5);
+$sliderVideos.forEach((video) => (video.volume = 0.5));
 
 const playChannel = ({ realIndex }) => {
   if (!isPower) return;
   currentVideo.pause();
   currentVideo = $sliderVideos[realIndex];
   currentVideo.play();
-  playAudio(switchChannelAudio);
-};
-
-const playAudio = (audio) => {
-  audio.resetPlay();
+  audio.switchChannel.resetPlay();
 };
 
 const channelNextTV = () => {
@@ -60,14 +50,14 @@ const muteTV = () => {
 
 const powerTV = () => {
   if (isPower) {
-    playAudio(offTVAudio);
+    audio.TVoff.resetPlay();
     removeTimer();
     currentVideo.pause();
     $slider.classList.add("hidden");
     $muteIcon.classList.add("hidden");
     isPower = false;
   } else {
-    playAudio(switchChannelAudio);
+    audio.switchChannel.resetPlay();
     removeTimer = setTimer();
     currentVideo.play();
     $slider.classList.remove("hidden");
@@ -118,109 +108,59 @@ const transformRemoteBody = (() => {
   };
 })();
 
+const buttonId = {
+  power: powerTV,
+  mute: muteTV,
+  "channel-prev": channelPrevTV,
+  "channel-next": channelNextTV,
+  "volumn-up": volumnUpTV,
+  "volumn-down": volumnDownTV
+};
+
 const handleControl = (e) => {
   if (e.target.id === "remote-body") return transformRemoteBody();
   if (isBroken) return;
   const remoteBtn = e.target.closest(".remote-btn");
   if (!remoteBtn) return;
-
-  switch (remoteBtn.id) {
-    case "power":
-      powerTV();
-      break;
-    case "mute":
-      muteTV();
-      break;
-    case "channel-prev":
-      channelPrevTV();
-      break;
-    case "channel-next":
-      channelNextTV();
-      break;
-    case "volumn-up":
-      volumnUpTV();
-      break;
-    case "volumn-down":
-      volumnDownTV();
-      break;
-
-    default:
-      break;
-  }
+  buttonId[remoteBtn.id]();
 };
+
 swiper.on("slideChangeTransitionStart", playChannel);
 
-let removeRemoteEvent = bindEvent($remote, "click", handleControl);
+bindEvent($remote, "click", handleControl);
 
 const handlePointer = (e) => {
   e.preventDefault();
-  const { clientX: x, clientY: y } = e;
-
-  gsap.to($pointer, {
-    duration: 0.01,
-    x: x,
-    y: y
-  });
+  anime.move($pointer, e.clientX, e.clientY);
 };
-
-let currentAudio;
-let isEnd = true;
-const audioItems = audios.map((item) => new AudioPlayer(item.src));
-const ccText = document.querySelector(".closed-caption .text");
 
 const handleRPointer = (e) => {
   e.preventDefault();
   if (!isEnd) return;
+
   isEnd = false;
+
   const idx = Math.floor(Math.random() * 8);
-  gsap.fromTo(
-    $pointer,
-    {
-      rotateZ: 10,
-      scaleY: 0.6
-    },
-    {
-      duration: 0.1,
-      scaleY: 1,
-      rotateZ: 0
-    }
-  );
-  gsap.to($pointer, {
-    backgroundImage: "var(--pointer-r-img)",
-    width: "var(--pointer-r-w)",
-    height: "var(--pointer-r-h)"
-  });
 
-  currentAudio = audioItems[idx];
+  anime.bounce($pointer);
+  anime.change($pointer, "r");
 
+  currentAudio = audio.swears[idx];
   currentAudio.play();
-  ccText.innerText = audios[idx].pol;
+
+  $ccText.innerText = swearData[idx].pol;
 
   currentAudio.isEnd(() => {
     isEnd = true;
-    ccText.innerText = "";
-    gsap.fromTo(
-      $pointer,
-      {
-        rotateZ: 10,
-        scaleY: 0.6
-      },
-      {
-        duration: 0.1,
-        scaleY: 1,
-        rotateZ: 0
-      }
-    );
-    gsap.to($pointer, {
-      backgroundImage: "var(--pointer-basic-img)",
-      width: "var(--pointer-basic-w)",
-      height: "var(--pointer-basic-h)"
-    });
+    $ccText.innerText = "";
+
+    anime.bounce($pointer);
+    anime.change($pointer, "basic");
   });
 };
 
-const removePointerREvent = bindEvent(body, "contextmenu", handleRPointer);
-const removePointerEvent = bindEvent(body, "mousemove", handlePointer);
+const removePointerREvent = bindEvent($body, "contextmenu", handleRPointer);
+const removePointerEvent = bindEvent($body, "mousemove", handlePointer);
 
 // click state 설정
 
@@ -242,13 +182,6 @@ const removePointerEvent = bindEvent(body, "mousemove", handlePointer);
 const $TVBtn = getNode("#tv-button");
 let fixValue = null;
 
-const punches = [
-  "/assets/audio/punch2.mp3",
-  "/assets/audio/punch3.mp3",
-  "/assets/audio/punch4.mp3",
-  "/assets/audio/punch5.mp3"
-].map((item) => new AudioPlayer(item));
-punches.forEach((punch) => punch.volume(0.5));
 // tvNoistAudio.volume(0.1);
 const turnToBroked = () => {
   fixValue = null;
@@ -260,7 +193,7 @@ const turnToBroked = () => {
   gsap.to(currentVideo, {
     autoAlpha: 0
   });
-  noise.loopPlay();
+  TVNoise.loopPlay();
 };
 
 const tryToFix = () => {
@@ -271,6 +204,7 @@ const tryToFix = () => {
 
   if (!isBroken || !isEnd) return;
 
+  audio.punchs[Math.floor(Math.random() * 4)].resetPlay();
   diceAnimation();
   if (fixValue === 2) turnToFixed();
 };
@@ -286,7 +220,7 @@ const turnToFixed = () => {
   });
   removeTimer();
   removeTimer = setTimer();
-  noise.stop();
+  TVNoise.stop();
 };
 
 const setTimer = () => {
@@ -303,24 +237,8 @@ const setTimer = () => {
 let removeTimer;
 let random;
 
-const punchAnime = gsap.to($pointer, {
-  backgroundImage: "var(--pointer-p-img)",
-  duration: 0.1,
-  scaleY: 1.2,
-  yoyo: true,
-  repeat: 3,
-  paused: true,
-  onComplete: () => {
-    gsap.to($pointer, {
-      scaleY: 1,
-      backgroundImage: "var(--pointer-basic-img)"
-    });
-  }
-});
-
 function diceAnimation() {
   random = gsap.utils.random([0, 1, 2]);
-  punches[Math.floor(Math.random() * 4)].resetPlay();
 
   function complete() {
     fixValue = Math.floor(Math.random() * 6);
@@ -332,7 +250,7 @@ function diceAnimation() {
     [10, 10] // 3
   ];
 
-  punchAnime.restart();
+  anime.punch($pointer).restart();
   gsap.to($TVBtn, {
     ease: "linear",
     duration: 0.1,
@@ -354,7 +272,7 @@ let removeLoding;
 
 removeLoding = bindEvent(loadingBtn, "click", () => {
   gsap.fromTo(
-    document.querySelector(".loading"),
+    getNode(".loading"),
     {
       autoAlpha: 1
     },
