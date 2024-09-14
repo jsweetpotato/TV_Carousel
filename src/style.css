@@ -157,7 +157,7 @@ h1 {
 
 .tv-button {
   width: 100%;
-  max-width: 900px;
+  max-width: min(900px, 80%);
   position: relative;
   background-color: transparent;
   border: none;
@@ -217,13 +217,15 @@ h1 {
 .remote-control {
   right: 10vw;
   bottom: 0;
-  max-height: 340px;
-  max-width: 160px;
+  height: 30vh;
+  max-height: 360px;
+  aspect-ratio: 12/24;
   background-color: transparent;
   border: none;
   z-index: 6;
   position: absolute;
 }
+
 .remote-control img {
   max-width: 100%;
 }

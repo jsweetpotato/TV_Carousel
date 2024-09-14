@@ -86,23 +86,9 @@ const transformRemoteBody = (() => {
   let isControl = true;
   return () => {
     if (isControl) {
-      gsap.fromTo(
-        $remote,
-        { y: 0 },
-        {
-          duration: 0.2,
-          y: "262"
-        }
-      );
+      gsap.to($remote, { yPercent: 80, duration: 0.4 });
     } else {
-      gsap.fromTo(
-        $remote,
-        { y: "262" },
-        {
-          duration: 0.2,
-          y: 0
-        }
-      );
+      gsap.to($remote, { yPercent: 0, duration: 0.4 });
     }
     isControl = !isControl;
   };
