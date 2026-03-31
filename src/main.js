@@ -179,7 +179,7 @@ const turnToBroked = () => {
   gsap.to(currentVideo, {
     autoAlpha: 0
   });
-  TVNoise.loopPlay();
+  audio.TVNoise.loopPlay();
 };
 
 const tryToFix = () => {
@@ -206,7 +206,7 @@ const turnToFixed = () => {
   });
   removeTimer();
   removeTimer = setTimer();
-  TVNoise.stop();
+  audio.TVNoise.stop();
 };
 
 const setTimer = () => {

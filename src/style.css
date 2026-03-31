@@ -6,8 +6,10 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-  background-image: radial-gradient(#fff, #131313),
-    linear-gradient(to bottom, #111111 70%, #5b5b5b 0%);
+
+  background-image: radial-gradient(#ffffffb5, #131313),
+    linear-gradient(to bottom, #111111 53%, #5b5b5b 0%);
+
   background-blend-mode: color-dodge, normal;
 
   font-synthesis: none;
@@ -28,20 +30,6 @@
   --pointer-p-img: url("/assets/punch.webp");
   --pointer-p-w: 150px;
   --pointer-p-h: 230px;
-}
-
-@media (max-width: 500px) {
-  :root {
-    background-image: radial-gradient(#ffffffb5, #131313),
-      linear-gradient(to bottom, #111111 50%, #5b5b5b 0%);
-  }
-  .pointer {
-    display: none;
-  }
-  .remote-control {
-    right: 0 !important;
-    transform: scale(0.9);
-  }
 }
 
 html,
@@ -111,6 +99,7 @@ html {
   width: 100%;
   height: 100%;
 }
+
 body {
   width: 100%;
   height: 100%;
@@ -134,7 +123,6 @@ h1 {
   width: var(--pointer-basic-w);
   height: var(--pointer-basic-h);
   z-index: 999;
-  /* background-color: green; */
   background-image: var(--pointer-basic-img);
   background-position: center;
   background-size: contain;
@@ -156,12 +144,45 @@ h1 {
 }
 
 .tv-button {
-  width: 100%;
-  max-width: min(900px, 80%);
+  display: block;
+  width: 90vw;
   position: relative;
   background-color: transparent;
   border: none;
 }
+
+@media (max-width: 500px) {
+  .pointer {
+    display: none;
+  }
+  .remote-control {
+    right: 0 !important;
+    transform: scale(0.9);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  :root {
+    background-image: radial-gradient(#fff, #131313),
+      linear-gradient(to bottom, #111111 60%, #5b5b5b 0%);
+  }
+
+  .tv-button {
+    width: 90vw;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  :root {
+    background-image: radial-gradient(#fff, #131313),
+      linear-gradient(to bottom, #111111 65%, #5b5b5b 0%);
+  }
+
+  .tv-button {
+    width: 1000px;
+  }
+}
+
 .bg {
   width: 80%;
   height: 80%;
@@ -182,11 +203,11 @@ h1 {
 }
 
 .mute-icon {
+  width: 10%;
+  height: 10%;
+  left: 10%;
+  top: 15%;
   position: absolute;
-  width: 7%;
-  height: 7%;
-  left: 9%;
-  top: 16%;
   mix-blend-mode: difference;
   opacity: 0.9;
   z-index: 2;
@@ -201,6 +222,7 @@ h1 {
     color: #747bff;
   }
 }
+
 .swiper {
   width: 75%;
   height: 75%;
@@ -217,7 +239,7 @@ h1 {
 .remote-control {
   right: 10vw;
   bottom: 0;
-  height: 30vh;
+  height: max(300px, 30vh);
   max-height: 360px;
   aspect-ratio: 12/24;
   background-color: transparent;
@@ -229,21 +251,39 @@ h1 {
 .remote-control img {
   max-width: 100%;
 }
+
 .remote-btns {
-  transform: translateY(-120%);
+  top: 70px;
+  width: calc(100% - 2rem);
+  position: absolute;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 40% 40% 10% 40%;
+  align-items: center;
+  justify-content: center;
   margin-inline: 1rem;
   margin-top: -25px;
-  row-gap: 1rem;
+}
+
+.remote-btns button {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.remote-btns button img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .remote-btn:active {
   filter: brightness(0.8);
 }
 
-.btn-wrapper p {
-  letter-spacing: -1px;
+.remote-btns p {
   font-size: 0.9rem;
   margin: 0;
 }
@@ -258,6 +298,7 @@ h1 {
   font-weight: bold;
   color: rgb(190, 79, 0);
 }
+
 .closed-caption .text {
   margin: 0;
   height: 50px;
